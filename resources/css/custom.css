@@ -1,0 +1,40 @@
+/* Custom Styles for the Dashboard */
+
+/* Sidebar Styles */
+.sidebar {
+    background: linear-gradient(to bottom, #f8fafc, #e5e7eb);
+    border-right: 1px solid #d1d5db;
+}
+
+.sidebar h2 {
+    color: #047857; /* Emerald green */
+}
+
+/* Menu Item Hover Effect */
+.menu-item:hover {
+    background: #d1fae5; /* Light green background */
+    transform: scale(1.02);
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+/* Cart Styles */
+.cart-item {
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+/* Button Hover Effects */
+button:hover {
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+button:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+}

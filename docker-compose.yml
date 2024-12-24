@@ -1,0 +1,56 @@
+services:
+  laravel.test:
+    build:
+      context: ./docker/8.1
+      dockerfile: Dockerfile
+    user: 'www-data'  # تحديد المستخدم داخل الحاوية
+    ports:
+      - '8080:80'  # تغيير المنفذ هنا من 80 إلى 8080
+      - '5173:5173'  # تأكد من تضمين المنفذ الخاص بـ Vite (إذا كنت تستخدمه)
+    environment:
+      WWWUSER: '${WWWUSER:-1000}'  # تعيين المستخدم داخل الحاوية
+      LARAVEL_SAIL: 1
+      XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+      XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+      IGNITION_LOCAL_SITES_PATH: '${PWD}'
+    volumes:
+      - .:/var/www/html
+    networks:
+      - sail
+    depends_on:
+      - mysql
+      - mailpit
+
+  mysql:
+    image: 'mysql:8.0'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_DATABASE: 'laravel'
+      MYSQL_USER: 'sail'
+      MYSQL_PASSWORD: 'password'
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - sail
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      retries: 3
+      timeout: 5s
+
+  mailpit:
+    image: 'axllent/mailpit:latest'
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+    networks:
+      - sail
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  sail:
+    driver: bridge
