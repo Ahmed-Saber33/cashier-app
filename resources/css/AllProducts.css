@@ -221,10 +221,8 @@
   color: #28a745;
 }
 
-.logo img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+.logo svg {
+ color: #28a745;
 }
 
 .menu-toggle {
@@ -674,10 +672,6 @@ button:hover {
   
 
 
-
-
-
-
 .product-card {
   background: #fff;
   border-radius: 12px;
@@ -719,36 +713,44 @@ button:hover {
   color: #333;
 }
 
-.product-price {
-  font-size: 14px;
-  color: #666;
+.price-and-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* Space between price and label */
 }
 
-.product-label {
-  margin-top: 8px;
+.product-price {
+  font-size: 14px;
+  color: #333;
+  font-weight: bold;
+}
+
+.veg-label,
+.non-veg-label {
+  background: #f0f0f0;
+  color: #333;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
 }
 
 .veg-label {
   background: #4caf50;
   color: #fff;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
 }
 
 .non-veg-label {
-  background: #f44336;
-  color: #fff;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
+  /* background: #f44336; */
+  color: #070606;
 }
 
 .quantity-selector {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 8px;
+  gap: 15px; /* Space between counter buttons */
+  margin-top: 8px;
 }
 
 .quantity-btn {
@@ -756,7 +758,9 @@ button:hover {
   border: none;
   padding: 6px 12px;
   font-size: 16px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: background 0.3s ease;
 }
 
 .quantity-btn:hover {
@@ -764,8 +768,9 @@ button:hover {
 }
 
 .quantity {
-  margin: 0 8px;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
 }
 
 .add-to-cart-btn {
@@ -777,6 +782,9 @@ button:hover {
   font-size: 14px;
   cursor: pointer;
   width: 100%;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s ease;
 }
 
 .add-to-cart-btn:hover {
