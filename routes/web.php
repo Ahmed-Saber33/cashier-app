@@ -22,9 +22,6 @@ Route::get('/', function () {
         'message' => 'Welcome to Inertia.js!',
     ]);
 });
-Route::get('dashboard', function () {
-    return Inertia::render('Dashboard');
-});
 
 Route::get('/', [ProductController::class, 'index'])->name('Home');
 Route::resource('products', ProductController::class);

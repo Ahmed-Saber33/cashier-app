@@ -21,9 +21,8 @@ class CategoryController extends Controller
     {
         $request->validate(['name' => 'required|string|max:255']);
         Category::create($request->all());
-        return response()->json(['message' => 'Category created successfully.']);
 
-        return Inertia::render(['message' => 'Category created successfully.']);
+        return redirect()->route('Home');
     }
 
     public function update(Request $request, $id)
@@ -31,13 +30,15 @@ class CategoryController extends Controller
         $category = Category::findOrFail($id);
         $category->update($request->all());
 
-        return Inertia::render(['message' => 'Category updated successfully.']);
-    }
+        return Inertia::render('Home', [
+            'category' => response()->json($category)
+        ]);    }
 
     public function destroy($id)
     {
 
         Category::destroy($id);
-        return Inertia::render(['message' => 'Category deleted successfully.']);
-    }
+        return Inertia::render('Home', [
+            'Category' => response()->json(['message' => 'Category deleted successfully.'])
+        ]);    }
 }
