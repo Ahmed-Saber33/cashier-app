@@ -752,15 +752,7 @@ button:hover {
     cursor: pointer;
 }
 
-/* .add-product-modal-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 400px;
-  max-width: 90%;
-  text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-} */
+
 
 .add-product-modal-header {
     font-size: 20px;
@@ -772,12 +764,8 @@ button:hover {
     margin-bottom: 20px;
 }
 
-/* .add-product-modal-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-} */
 
+<<<<<<< HEAD
 /* .add-product-modal-content button {
   padding: 10px 20px;
   background-color: #28a745;
@@ -811,6 +799,8 @@ button:hover {
 } */
 
 /* Close button for the modal */
+=======
+>>>>>>> refs/remotes/origin/main
 .add-product-modal-close {
     font-size: 30px;
     position: absolute;

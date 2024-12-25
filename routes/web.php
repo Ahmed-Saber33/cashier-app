@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 
@@ -22,3 +25,11 @@ Route::get('/', function () {
 Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
 });
+
+Route::get('/', [ProductController::class, 'index'])->name('Home');
+Route::resource('products', ProductController::class);
+
+Route::resource('categories', CategoryController::class);
+
+Route::resource('orders', OrderController::class);
+
