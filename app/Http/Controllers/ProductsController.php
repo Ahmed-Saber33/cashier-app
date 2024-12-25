@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use GuzzleHttp\Promise\Create;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ProductController extends Controller
 {
@@ -15,7 +16,11 @@ class ProductController extends Controller
     {
         //
         $products = Product::with('category')->get();
-        return response()->json($products);
+        // return response()->json($products);
+
+        return Inertia::render('Home', [
+            'products' => response()->json($products)
+        ]);
     }
 
 
@@ -33,7 +38,7 @@ class ProductController extends Controller
             'image' => 'required',
         ]);
         Product::create($request->all());
-        return response()->json(['message' => 'Product created successfully.']);
+        return redirect()->route('Home');
     }
 
     /**
@@ -43,7 +48,9 @@ class ProductController extends Controller
     {
         //
         $product = Product::with('category')->findOrFail($id);
-        return response()->json($product);
+        return Inertia::render('Home', [
+            'products' => response()->json($product)
+        ]);
     }
 
 
@@ -63,7 +70,9 @@ class ProductController extends Controller
 
         $product = Product::findOrFail($id);
         $product->update($request->all());
-        return response()->json(['message' => 'Product updated successfully']);
+        return Inertia::render('Home', [
+            'products' => response()->json($product)
+        ]);
     }
 
     /**
@@ -73,6 +82,8 @@ class ProductController extends Controller
     {
         //
         Product::destroy($id);
-        return response()->json(['message' => 'Product deleted successfully']);
+        return Inertia::render('Home', [
+            'products' => response()->json(['message' => 'Product deleted successfully.'])
+        ]);
     }
 }
