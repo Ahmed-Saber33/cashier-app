@@ -24,7 +24,7 @@ Route::get('/', function () {
 Route::get('/', [ProductController::class, 'index'])->name('Home');
 Route::post('product/store', [ProductController::class, 'store'])->name('products.store');
 Route::post('product/update', [ProductController::class, 'update'])->name('products.update');
-Route::post('product/destroy', [ProductController::class, 'destroy'])->name('products.destroy');
+Route::delete('product/destroy/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
 Route::get('product/{product}', [ProductController::class, 'show'])->name('products.show'); // Display the specified category
 
 

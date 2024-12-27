@@ -1,7 +1,8 @@
-// import React from "react";
-import React, { useState } from "react";
+import React from "react";
+import  { useState } from "react";
+import { Inertia } from '@inertiajs/inertia'; // Import Inertia from '@inertiajs/inertia'
+import { useForm,  } from "@inertiajs/inertia-react";
 
-import { useForm, route } from "@inertiajs/inertia-react";
 
 const ProductCard = ({ product, cart, setCart }) => {
   const { delete: destroy } = useForm();
@@ -10,19 +11,23 @@ const ProductCard = ({ product, cart, setCart }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
 
-  const handleDelete = () => {
+  
+  const handleDelete = (id) => {
     if (confirm("Are you sure you want to delete this product?")) {
-      destroy(route("products.destroy", product.id), {
+      Inertia.delete(route("products.destroy", { product: id }), {
         onSuccess: () => {
-          // Optional: You can remove the product from the local state after successful delete
           alert("Product deleted successfully");
         },
         onError: (error) => {
-          alert("Failed to delete product: " + error.message);
-        }
+          alert("Failed to delete product");
+        },
       });
     }
   };
+  
+
+
+  
 // Helper functions for cart operations
 const addToCart = (product) => {
   setCart((prevCart) => {
@@ -62,11 +67,11 @@ const handleEditProduct = (product) => {
   return (
     <div key={product.id} className="product-card">
     <div className="product-image-container">
-      <img
-        src={product.image}
-        alt={product.name}
-        className="product-image"
-      />
+    <img
+  src={product.image ? `/storage/${product.image}` : '/path-to-default-image.jpg'}
+  alt={product.name}
+  className="product-image"
+/>
       {product.discount && (
         <span className="discount-badge">
           {product.discount}% Off

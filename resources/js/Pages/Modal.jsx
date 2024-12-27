@@ -1,44 +1,61 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "@inertiajs/inertia-react";
+import { router } from "@inertiajs/react";
 
 const Modal = ({ product, setProduct, setShowModal, categories }) => {
-  const { data, setData, post, put, processing, errors } = useForm({
-    name: product.name,
-    price: product.price,
-    quantity: product.quantity,
-    category_id: product.category_id,
-    image: product.image,
+  const { data, setData, post, processing, errors, reset } = useForm({
+    name: "",
+    price: "",
+    quantity: "",
+    category_id: "",
+    image: null,
   });
 
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
-    setData({
-      name: product.name,
-      price: product.price,
-      quantity: product.quantity,
-      category_id: product.category_id,
-      image: product.image,
-    });
+    if (product) {
+      setData({
+        name: product.name || "",
+        price: product.price || "",
+        quantity: product.quantity || "",
+        category_id: product.category_id || "",
+        image: null, // Reset image for file upload
+      });
+    } else {
+      reset();
+    }
   }, [product]);
+
+  const handleFileChange = (e) => {
+    setData("image", e.target.files[0]);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (product.id) {
-      put(route("products.update", product.id)); // تحديث المنتج
-    } else {
-      post(route("products.store")); // إضافة المنتج
-    }
+    setLoading(true);
+
+    const route = product && product.id ? `product/update/${product.id}` : "product/store";
+    const method = product && product.id ? "put" : "post";
+
+    router[method](route, data, {
+      onError: (err) => setLoading(false),
+      onFinish: () => setLoading(false),
+    });
   };
 
   return (
     <div className="add-product-modal">
       <div className="add-product-modal-content">
         <form onSubmit={handleSubmit}>
-          <h2>{product.id ? "Update Product" : "Add Product"}</h2>
+          <h2>{product && product.id ? "Update Product" : "Add Product"}</h2>
+
           <label>Name
             <input
               type="text"
               value={data.name}
               onChange={(e) => setData("name", e.target.value)}
+              disabled={loading}
             />
             {errors.name && <div>{errors.name}</div>}
           </label>
@@ -48,6 +65,7 @@ const Modal = ({ product, setProduct, setShowModal, categories }) => {
               type="number"
               value={data.price}
               onChange={(e) => setData("price", e.target.value)}
+              disabled={loading}
             />
             {errors.price && <div>{errors.price}</div>}
           </label>
@@ -57,44 +75,43 @@ const Modal = ({ product, setProduct, setShowModal, categories }) => {
               type="number"
               value={data.quantity}
               onChange={(e) => setData("quantity", e.target.value)}
+              disabled={loading}
             />
             {errors.quantity && <div>{errors.quantity}</div>}
           </label>
 
           <label>Category
-  <select
-    value={data.category_id}
-    onChange={(e) => setData("category_id", e.target.value)}
-  >
-    <option value="">Select a category</option>
-    {categories && categories.length > 0 ? (
-      categories.map((category) => (
-        <option key={category.id} value={category.id}>
-          {category.name}
-        </option>
-      ))
-    ) : (
-      <option value="">No categories available</option>
-    )}
-  </select>
-  {errors.category_id && <div>{errors.category_id}</div>}
-</label>
-
+            <select
+              value={data.category_id}
+              onChange={(e) => setData("category_id", e.target.value)}
+              disabled={loading}
+            >
+              <option value="">Select a category</option>
+              {categories?.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+            {errors.category_id && <div>{errors.category_id}</div>}
+          </label>
 
           <label>Image
             <input
-              type="text"
-              value={data.image}
-              onChange={(e) => setData("image", e.target.value)}
+              type="file"
+              onChange={handleFileChange}
+              disabled={loading}
             />
             {errors.image && <div>{errors.image}</div>}
           </label>
 
-          <button type="submit" disabled={processing}>
-            {processing ? "Saving..." : "Save"}
+          <button type="submit" disabled={processing || loading}>
+            {processing || loading ? "Saving..." : "Save"}
           </button>
         </form>
-        <button onClick={() => setShowModal(false)}>Close</button>
+        <button onClick={() => setShowModal(false)} disabled={loading}>
+          Close
+        </button>
       </div>
     </div>
   );

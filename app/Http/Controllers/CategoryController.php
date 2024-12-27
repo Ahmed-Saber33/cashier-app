@@ -39,6 +39,6 @@ class CategoryController extends Controller
 
         Category::destroy($id);
         return Inertia::render('Home', [
-            'Category' => response()->json(['message' => 'Category deleted successfully.'])
+            'Category' => 'Category deleted successfully.'
         ]);    }
 }

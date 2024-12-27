@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
-use GuzzleHttp\Promise\Create;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Product;
+use App\Models\Category;
+use Illuminate\Http\Request;
+use GuzzleHttp\Promise\Create;
 
 class ProductController extends Controller
 {
@@ -17,9 +18,12 @@ class ProductController extends Controller
         //
         $products = Product::with('category')->get();
         // return response()->json($products);
+        $categories = Category::all();
 
         return Inertia::render('Home', [
-            'products' =>$products
+            'products' =>$products,
+            'categories' => $categories
+
         ]);
     }
 
@@ -27,6 +31,24 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    // public function store(Request $request)
+    // {
+    //     $request->validate([
+    //         'image' => 'required|image|mimes:jpg,png,jpeg|max:2048',
+    //         'name' => 'required | min:3',
+    //         'price' => 'required | numeric | min:1',
+    //         'description' => 'required | min:10',
+    //     ]);
+    //     $imagePath = $request->file('image')->store('products', 'public');
+    //     Product::create([
+    //         'image_path' => $imagePath,
+    //         'name' => $request->name,
+    //         'price' => $request->price,
+    //         'description' => $request->description,
+    //     ])->save();
+    //     return redirect()->route('Home');
+
+    // }
     public function store(Request $request)
     {
         //
@@ -37,7 +59,14 @@ class ProductController extends Controller
             'quantity' => 'required',
             'image' => 'required',
         ]);
-        Product::create($request->all());
+        $imagePath = $request->file('image')->store('products', 'public');
+        Product::create([
+            'image' => $imagePath,
+            'name' => $request->name,
+            'price' => $request->price,
+            'quantity' => $request->quantity,
+            'category_id' => $request->category_id,
+        ])->save();
         return redirect()->route('Home');
     }
 
@@ -80,10 +109,11 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
-        Product::destroy($id);
+        $product = Product::findOrFail($id);
+        
+        $product->delete();
         return Inertia::render('Home', [
-            'products' => response()->json(['message' => 'Product deleted successfully.'])
+            'products' =>'Product deleted successfully.'
         ]);
     }
 }

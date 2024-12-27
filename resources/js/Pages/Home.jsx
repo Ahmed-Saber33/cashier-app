@@ -7,34 +7,18 @@ import CartModal from "./CartModal";
 import "../../css/AllProducts.css";
 
 const ProductManager = (props) => {
-  const { products, categories } = props; // Destructure categories passed via Inertia
-  console.log(products);
-  console.log(categories); // Check categories data
+  const { products, categories } = props;
+  // console.log(products);
   
 
-  // const [categories, setCategories] = useState([]); // حالة لتخزين الفئات
   const [cart, setCart] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [showCartModal, setShowCartModal] = useState(false);
-  const [showOptionsModal, setShowOptionsModal] = useState(false); // New state for options modal
+  const [showOptionsModal, setShowOptionsModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [activeTab, setActiveTab] = useState("All");
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch("/categories");
-        const data = await response.json();
-        setCategories(data);
-      } catch (error) {
-        console.error("Failed to fetch categories:", error);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
+  const [category, setCategories]=useState(categories)
   const handleOrder = () => {
     alert("Order placed successfully!");
     setCart([]);
@@ -93,7 +77,7 @@ const ProductManager = (props) => {
         handleTabClick={handleTabClick}
         cart={cart}
         setCart={setCart}
-        openOptionsModal={openOptionsModal} // Pass the options modal handler
+        openOptionsModal={openOptionsModal} 
       />
 
       {showModal && (
@@ -101,6 +85,7 @@ const ProductManager = (props) => {
           product={selectedProduct}
           setProduct={setSelectedProduct}
           setShowModal={setShowModal}
+          categories = {category}
         />
       )}
 
