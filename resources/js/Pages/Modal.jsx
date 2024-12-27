@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "@inertiajs/inertia-react";
 
-const Modal = ({ product, setProduct, setShowModal, setProducts }) => {
+const Modal = ({ product, setProduct, setShowModal, categories }) => {
   const { data, setData, post, put, processing, errors } = useForm({
     name: product.name,
     price: product.price,
@@ -23,9 +23,9 @@ const Modal = ({ product, setProduct, setShowModal, setProducts }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (product.id) {
-      put(route("products.update", product.id)); // Update product
+      put(route("products.update", product.id)); // تحديث المنتج
     } else {
-      post(route("products.store")); // Create product
+      post(route("products.store")); // إضافة المنتج
     }
   };
 
@@ -62,16 +62,24 @@ const Modal = ({ product, setProduct, setShowModal, setProducts }) => {
           </label>
 
           <label>Category
-            <select
-              value={data.category_id}
-              onChange={(e) => setData("category_id", e.target.value)}
-            >
-              {/* Assuming you have categories */}
-              <option value="1">Category 1</option>
-              <option value="2">Category 2</option>
-              <option value="3">Category 3</option>
-            </select>
-          </label>
+  <select
+    value={data.category_id}
+    onChange={(e) => setData("category_id", e.target.value)}
+  >
+    <option value="">Select a category</option>
+    {categories && categories.length > 0 ? (
+      categories.map((category) => (
+        <option key={category.id} value={category.id}>
+          {category.name}
+        </option>
+      ))
+    ) : (
+      <option value="">No categories available</option>
+    )}
+  </select>
+  {errors.category_id && <div>{errors.category_id}</div>}
+</label>
+
 
           <label>Image
             <input

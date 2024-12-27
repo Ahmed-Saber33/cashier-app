@@ -19,7 +19,7 @@ class ProductController extends Controller
         // return response()->json($products);
 
         return Inertia::render('Home', [
-            'products' => response()->json($products)
+            'products' =>$products
         ]);
     }
 

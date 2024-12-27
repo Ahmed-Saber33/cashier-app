@@ -1,26 +1,39 @@
 import React, { useState, useEffect } from "react";
-import { usePage } from "@inertiajs/inertia-react"; // Hook for accessing Inertia page props
+import { Inertia } from "@inertiajs/inertia";
 import ProductList from "./ProductList";
 import Navbar from "./Navbar";
 import Modal from "./Modal";
 import CartModal from "./CartModal";
 import "../../css/AllProducts.css";
 
-const ProductManager = () => {
-  const { products } = usePage().props; // Getting products data from Inertia
+const ProductManager = (props) => {
+  const { products, categories } = props; // Destructure categories passed via Inertia
+  console.log(products);
+  console.log(categories); // Check categories data
+  
+
+  // const [categories, setCategories] = useState([]); // حالة لتخزين الفئات
   const [cart, setCart] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [showCartModal, setShowCartModal] = useState(false);
-  const [newProduct, setNewProduct] = useState({
-    id: null,
-    name: "",
-    price: "",
-    quantity: "",
-    category: "",
-    image: "",
-  });
+  const [showOptionsModal, setShowOptionsModal] = useState(false); // New state for options modal
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [activeTab, setActiveTab] = useState("All");
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("/categories");
+        const data = await response.json();
+        setCategories(data);
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleOrder = () => {
     alert("Order placed successfully!");
@@ -31,9 +44,39 @@ const ProductManager = () => {
     setActiveTab(tabName);
   };
 
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredProducts = products.filter((product) => {
+    const matchesQuery = product.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesTab = activeTab === "All" || product.category === activeTab;
+    return matchesQuery && matchesTab;
+  });
+
+  const closeCartModal = () => {
+    setShowCartModal(false);
+  };
+
+  const removeFromCart = (productId) => {
+    setCart((prevCart) => prevCart.filter((item) => item.id !== productId));
+  };
+
+  const handleEdit = (product) => {
+    setSelectedProduct(product);
+    setShowModal(true);
+  };
+
+  const handleDelete = (product) => {
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      Inertia.delete(`/products/${product.id}`);
+    }
+  };
+
+  const openOptionsModal = (product) => {
+    setSelectedProduct(product);
+    setShowOptionsModal(true);
+  };
+
+  const closeOptionsModal = () => {
+    setShowOptionsModal(false);
+  };
 
   return (
     <div className="product-manager">
@@ -50,16 +93,35 @@ const ProductManager = () => {
         handleTabClick={handleTabClick}
         cart={cart}
         setCart={setCart}
+        openOptionsModal={openOptionsModal} // Pass the options modal handler
       />
+
       {showModal && (
         <Modal
-          product={newProduct}
-          setProduct={setNewProduct}
+          product={selectedProduct}
+          setProduct={setSelectedProduct}
           setShowModal={setShowModal}
-          setProducts={setProducts}
         />
       )}
-      {showCartModal && <CartModal cart={cart} handleOrder={handleOrder} />}
+
+      {showOptionsModal && (
+        <div className="options-modal">
+          <div className="options-modal-content">
+            <h3>Product Options</h3>
+            <button onClick={() => handleEdit(selectedProduct)}>Update</button>
+            <button onClick={() => handleDelete(selectedProduct)}>Delete</button>
+            <button onClick={closeOptionsModal}>Close</button>
+          </div>
+        </div>
+      )}
+
+      <CartModal
+        cart={cart}
+        handleOrder={handleOrder}
+        showCartModal={showCartModal}
+        closeCartModal={closeCartModal}
+        removeFromCart={removeFromCart}
+      />
     </div>
   );
 };

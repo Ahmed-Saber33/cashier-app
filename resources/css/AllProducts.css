@@ -327,7 +327,7 @@
 }
 
 /* Product Card */
-.product-card {
+/* .product-card {
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -358,13 +358,13 @@
     font-weight: bold;
     margin: 10px 0;
     color: #333;
-}
+} */
 
-.product-price {
+/* .product-price {
     font-size: 1.2rem;
     color: #28a745;
     margin: 5px 0;
-}
+} */
 
 /* Product Tag */
 .product-tag {
@@ -386,7 +386,7 @@
 }
 
 /* Add to Cart Button */
-.add-to-cart-btn {
+/* .add-to-cart-btn {
     display: inline-block;
     padding: 10px 15px;
     background-color: #28a745;
@@ -401,11 +401,11 @@
 
 .add-to-cart-btn:hover {
     background-color: #218838;
-}
+} */
 
 
 /* Dish Type Tabs Container */
-.dish-type-tabs {
+/* .dish-type-tabs {
     display: flex;
     gap: 15px;
     overflow-x: auto;
@@ -415,7 +415,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
     margin-top: 20px;
-}
+} */
 
 /* Dish Type Tabs Container */
 .dish-type-tabs {
@@ -507,8 +507,8 @@
 
 .action-menu {
     position: absolute;
-    top: 30px;
-    right: 0;
+    top: 3px;
+    right: 10px;
     background-color: white;
     border: 1px solid #28a745;
     border-radius: 4px;
@@ -517,6 +517,8 @@
     flex-direction: column;
     padding: 10px;
     z-index: 10;
+    border: none;
+
 }
 
 .action-menu button {

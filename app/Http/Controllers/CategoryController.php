@@ -12,7 +12,7 @@ class CategoryController extends Controller
     {
         $categories = Category::all();
         return Inertia::render('Home', [
-            'categories' => response()->json(response()->json($categories))
+            'categories' => $categories
         ]);
 
     }
