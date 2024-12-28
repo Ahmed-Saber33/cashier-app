@@ -10,9 +10,9 @@ const ProductCard = ({ product, cart, setCart, handleEditProduct }) => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
-  
 
-  
+
+
   const handleDelete = (id) => {
     if (confirm("Are you sure you want to delete this product?")) {
       Inertia.delete(route("products.destroy", { product: id }), {
@@ -66,7 +66,7 @@ const getCartQuantity = (productId) => {
     <div key={product.id} className="product-card">
     <div className="product-image-container">
     <img
-  src={product.image ? `/storage/${product.image}` : '/path-to-default-image.jpg'}
+  src={product.image ? `/storage/${product.image}` : ''}
   alt={product.name}
   className="product-image"
     />
