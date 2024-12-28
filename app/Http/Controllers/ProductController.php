@@ -5,50 +5,27 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use GuzzleHttp\Promise\Create;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index()
     {
         //
-        $products = Product::with('category')->get();
-        // return response()->json($products);
+        $products = Product::with(['category' => function ($query) {
+            $query->select('id', 'name'); // تحديد الحقول التي تريد استرجاعها من العلاقة
+        }])->get();
         $categories = Category::all();
-
         return Inertia::render('Home', [
             'products' =>$products,
-            'categories' => $categories
+            'categories' => $categories,
 
         ]);
     }
 
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    // public function store(Request $request)
-    // {
-    //     $request->validate([
-    //         'image' => 'required|image|mimes:jpg,png,jpeg|max:2048',
-    //         'name' => 'required | min:3',
-    //         'price' => 'required | numeric | min:1',
-    //         'description' => 'required | min:10',
-    //     ]);
-    //     $imagePath = $request->file('image')->store('products', 'public');
-    //     Product::create([
-    //         'image_path' => $imagePath,
-    //         'name' => $request->name,
-    //         'price' => $request->price,
-    //         'description' => $request->description,
-    //     ])->save();
-    //     return redirect()->route('Home');
-
-    // }
     public function store(Request $request)
     {
         //
@@ -99,9 +76,8 @@ class ProductController extends Controller
 
         $product = Product::findOrFail($id);
         $product->update($request->all());
-        return Inertia::render('Home', [
-            'products' => response()->json($product)
-        ]);
+        return redirect()->route('Home');
+
     }
 
     /**

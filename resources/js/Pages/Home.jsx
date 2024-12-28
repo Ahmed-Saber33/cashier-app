@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Inertia } from "@inertiajs/inertia";
+import { router } from "@inertiajs/react";
+
 import ProductList from "./ProductList";
 import Navbar from "./Navbar";
 import Modal from "./Modal";
@@ -8,9 +10,7 @@ import "../../css/AllProducts.css";
 
 const ProductManager = (props) => {
   const { products, categories } = props;
-  // console.log(products);
   
-
   const [cart, setCart] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -18,19 +18,35 @@ const ProductManager = (props) => {
   const [showOptionsModal, setShowOptionsModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [activeTab, setActiveTab] = useState("All");
-  const [category, setCategories]=useState(categories)
+  const [category, setCategories] = useState(categories);
+
   const handleOrder = () => {
-    alert("Order placed successfully!");
-    setCart([]);
+    const orderData = {
+      products: cart.map((item) => ({
+        id: item.id,
+        quantity: item.quantity,
+      })),
+    };
+
+    // إرسال الطلب إلى السيرفر
+     router.post(route("orders.store"), orderData, {
+      onSuccess: (response) => {
+        setCart([]);
+      },
+      onError: (error) => {
+        alert("Failed to place order. Please try again.");
+      },
+    });
   };
 
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
   };
 
+  const categoriesList = ["All", ...new Set(products.map((product) => product.category.name))];
   const filteredProducts = products.filter((product) => {
     const matchesQuery = product.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesTab = activeTab === "All" || product.category === activeTab;
+    const matchesTab = activeTab === "All" || product.category.name === activeTab;
     return matchesQuery && matchesTab;
   });
 
@@ -62,6 +78,11 @@ const ProductManager = (props) => {
     setShowOptionsModal(false);
   };
 
+  const handleEditProduct = (product) => {
+    setSelectedProduct(product); // تحديد المنتج الذي سيتم تعديله
+    setShowModal(true); // فتح المودال
+  };
+
   return (
     <div className="product-manager">
       <Navbar
@@ -77,15 +98,17 @@ const ProductManager = (props) => {
         handleTabClick={handleTabClick}
         cart={cart}
         setCart={setCart}
-        openOptionsModal={openOptionsModal} 
+        categories={categoriesList} // تمرير الفئات المصفاة
+        openOptionsModal={openOptionsModal}
+        handleEditProduct={handleEditProduct} // تمرير الدالة
       />
 
       {showModal && (
         <Modal
-          product={selectedProduct}
+          product={selectedProduct} // تمرير المنتج المحدد
           setProduct={setSelectedProduct}
           setShowModal={setShowModal}
-          categories = {category}
+          categories={category} // تمرير قائمة التصنيفات
         />
       )}
 

@@ -20,7 +20,7 @@ const Modal = ({ product, setProduct, setShowModal, categories }) => {
         price: product.price || "",
         quantity: product.quantity || "",
         category_id: product.category_id || "",
-        image: null, // Reset image for file upload
+        image: null, 
       });
     } else {
       reset();
@@ -34,15 +34,25 @@ const Modal = ({ product, setProduct, setShowModal, categories }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-
+  
     const route = product && product.id ? `product/update/${product.id}` : "product/store";
-    const method = product && product.id ? "put" : "post";
-
-    router[method](route, data, {
+  
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("price", data.price);
+    formData.append("quantity", data.quantity);
+    formData.append("category_id", data.category_id);
+    if (data.image) {
+      formData.append("image", data.image);
+    }
+  
+    router.post(route, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
       onError: (err) => setLoading(false),
       onFinish: () => setLoading(false),
     });
   };
+  
 
   return (
     <div className="add-product-modal">

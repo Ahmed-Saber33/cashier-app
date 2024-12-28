@@ -4,12 +4,13 @@ import { Inertia } from '@inertiajs/inertia'; // Import Inertia from '@inertiajs
 import { useForm,  } from "@inertiajs/inertia-react";
 
 
-const ProductCard = ({ product, cart, setCart }) => {
+const ProductCard = ({ product, cart, setCart, handleEditProduct }) => {
   const { delete: destroy } = useForm();
   const [hoveredProduct, setHoveredProduct] = useState(null);
   const [editingProduct, setEditingProduct] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
+  
 
   
   const handleDelete = (id) => {
@@ -24,10 +25,6 @@ const ProductCard = ({ product, cart, setCart }) => {
       });
     }
   };
-  
-
-
-  
 // Helper functions for cart operations
 const addToCart = (product) => {
   setCart((prevCart) => {
@@ -59,11 +56,12 @@ const getCartQuantity = (productId) => {
   const item = cart.find((item) => item.id === productId);
   return item ? item.quantity : 0;
 };
+// const handleEditProduct = (product) => {
+//   console.log("Editing product:", product); // للتحقق من القيم
+//   setEditingProduct(product);
+//   setModalVisible(true);
+// };
 
-const handleEditProduct = (product) => {
-  setEditingProduct(product);
-  setModalVisible(true);
-};
   return (
     <div key={product.id} className="product-card">
     <div className="product-image-container">
@@ -71,7 +69,7 @@ const handleEditProduct = (product) => {
   src={product.image ? `/storage/${product.image}` : '/path-to-default-image.jpg'}
   alt={product.name}
   className="product-image"
-/>
+    />
       {product.discount && (
         <span className="discount-badge">
           {product.discount}% Off
@@ -128,15 +126,16 @@ const handleEditProduct = (product) => {
      {/* Options Menu */}
      {showOptions && (
           <div className="action-menu ">
-            <button
+           <button
               className="options-btn"
               onClick={() => {
-                handleEditProduct(product);
-                setShowOptions(false); // Close the menu
+                handleEditProduct(product); // تحديث المنتج المحدد
+                setShowOptions(false); // إغلاق القائمة
               }}
             >
               Update
             </button>
+
             <button
               className="options-btn delete"
               onClick={() => {

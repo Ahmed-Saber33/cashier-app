@@ -5,6 +5,7 @@ const Navbar = ({ searchQuery, setSearchQuery, cart, openCartModal, openProductM
     <nav className="navbar">
       <div className="navbar-left">
         <div className="logo">
+        <img width="50" height="50" src="https://img.icons8.com/?size=100&id=AGyESwRkpyjW&format=png&color=000000" alt="shopping-cart"/>       
           <span>CHILI POS</span>
         </div>
         <button className="menu-toggle">
@@ -12,6 +13,7 @@ const Navbar = ({ searchQuery, setSearchQuery, cart, openCartModal, openProductM
         </button>
       </div>
       <div className="navbar-center">
+
         <input
           type="text"
           className="search-bar"
@@ -21,7 +23,8 @@ const Navbar = ({ searchQuery, setSearchQuery, cart, openCartModal, openProductM
         />
       </div>
       <div className="navbar-right">
-        <button className="cart-icon" onClick={openCartModal}>
+      <img width="50" height="50" src="https://img.icons8.com/cute-clipart/64/shopping-cart.png" alt="shopping-cart"/>  
+            <button className="cart-icon" onClick={openCartModal}>
           <span className="cart-count">{cart.length}</span>
         </button>
         <button className="add-product-btn" onClick={openProductModal}>

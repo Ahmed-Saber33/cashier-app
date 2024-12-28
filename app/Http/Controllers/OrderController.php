@@ -54,13 +54,12 @@ class OrderController extends Controller
             $order->orderDetails()->create([
                 'order_id' => $order->id,
                 'product_id' => $product['id'],
-                // 'quantity' => $product['quantity'],
+                'quantity' => $product['quantity'],
                 'price' => $productData->price,
             ]);
         }
 
-        return Inertia::render('Home', ['message' => 'Order created successfully!', 'order' => $order]);
-    }
+        return redirect()->route('Home');    }
 
     /**
      * Display the specified resource.
