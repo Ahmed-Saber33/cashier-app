@@ -16,7 +16,7 @@ class ProductController extends Controller
     {
         //
         $products = Product::with(['category' => function ($query) {
-            $query->select('id', 'name'); // تحديد الحقول التي تريد استرجاعها من العلاقة
+            $query->select('id', 'name'); 
         }])->get();
         $categories = Category::all();
         return Inertia::render('Home', [
@@ -65,20 +65,31 @@ class ProductController extends Controller
      */
     public function update(Request $request, int $id)
     {
-        //
         $request->validate([
             'name' => 'required|string|max:255|min:3',
-            'category_id' => 'required',
-            'price' => 'required',
-            'quantity' => 'required',
-            'image' => 'required',
+            'category_id' => 'required|exists:categories,id',
+            'price' => 'required|numeric|min:0',
+            'quantity' => 'required|integer|min:0',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-
+    
         $product = Product::findOrFail($id);
-        $product->update($request->all());
+    
+        $product->name = $request->name;
+        $product->category_id = $request->category_id;
+        $product->price = $request->price;
+        $product->quantity = $request->quantity;
+    
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('products', 'public');
+            $product->image = $imagePath;
+        }
+    
+        $product->save();
+    
         return redirect()->route('Home');
-
     }
+    
 
     /**
      * Remove the specified resource from storage.
@@ -88,8 +99,7 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         
         $product->delete();
-        return Inertia::render('Home', [
-            'products' =>'Product deleted successfully.'
-        ]);
+        return redirect()->route('Home');
+ 
     }
 }

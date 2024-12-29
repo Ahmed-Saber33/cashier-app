@@ -28,7 +28,6 @@ const ProductManager = (props) => {
       })),
     };
 
-    // إرسال الطلب إلى السيرفر
      router.post(route("orders.store"), orderData, {
       onSuccess: (response) => {
         setCart([]);
@@ -80,7 +79,7 @@ const ProductManager = (props) => {
 
   const handleEditProduct = (product) => {
     setSelectedProduct(product); // تحديد المنتج الذي سيتم تعديله
-    setShowModal(true); // فتح المودال
+    setShowModal(true); 
   };
 
   return (
@@ -98,17 +97,17 @@ const ProductManager = (props) => {
         handleTabClick={handleTabClick}
         cart={cart}
         setCart={setCart}
-        categories={categoriesList} // تمرير الفئات المصفاة
+        categories={categoriesList} 
         openOptionsModal={openOptionsModal}
-        handleEditProduct={handleEditProduct} // تمرير الدالة
+        handleEditProduct={handleEditProduct}
       />
 
       {showModal && (
         <Modal
-          product={selectedProduct} // تمرير المنتج المحدد
+          product={selectedProduct}
           setProduct={setSelectedProduct}
           setShowModal={setShowModal}
-          categories={category} // تمرير قائمة التصنيفات
+          categories={category} 
         />
       )}
 
